@@ -1,26 +1,20 @@
-import requests
-from bs4 import BeautifulSoup
+from api import get_count_of_pages, get_dict_of_course
+import pandas as pd
 
-# 定义目标URL
-url = 'https://www.fanshawec.ca/programs/anc1-3d-animation-and-character-design/'
+if __name__ == '__main__':
 
-# 发送GET请求获取页面内容
-response = requests.get(url)
+    # data
+    data = []
 
-# 检查请求是否成功
-if response.status_code == 200:
-    # 使用BeautifulSoup解析页面内容
-    soup = BeautifulSoup(response.text, 'html.parser')
+    # get the count of pages
+    count_of_pages = get_count_of_pages()
 
-    # 查找包含"ADMISSION REQUIREMENTS"信息的元素
-    admission_requirements_element_h2 = soup.find('h2', {'id': 'admission-requirements'})
-    admission_requirements = admission_requirements_element_h2.find_next('div')
+    # get detail
+    for i in range(count_of_pages):
+        get_dict_of_course(i, data)
 
-    # 提取文本信息
-    admission_requirements_text = admission_requirements.get_text(strip=True)
-
-    # 打印提取的信息
-    print(admission_requirements_text)
-
-else:
-    print(f"Failed to retrieve the page. Status code: {response.status_code}")
+    # Store to Excel
+    df = pd.DataFrame(data)
+    with pd.ExcelWriter('output.xlsx', engine='openpyxl') as writer:
+        df.to_excel(writer, index=False, sheet_name='Sheet1')
+    print(data)
