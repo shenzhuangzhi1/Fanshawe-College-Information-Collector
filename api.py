@@ -37,15 +37,31 @@ def get_detail_of_course(detail_url, name, datas):
         # Use BeautifulSoup to parse page content
         soup = BeautifulSoup(response.text, 'html.parser')
 
-        # Find elements containing "ADMISSION REQUIREMENTS" information
-        admission_requirements_element_h2 = soup.find('h2', {'id': 'admission-requirements'})
-        if admission_requirements_element_h2 is not None:
-            admission_requirements = admission_requirements_element_h2.find_next('div').text
+        for data in datas:
+            if data['name'] == name:
+                # Find elements containing "ADMISSION REQUIREMENTS" information
+                admission_requirements_element_h2 = soup.find('h2', {'id': 'admission-requirements'})
+                if admission_requirements_element_h2 is not None:
+                    admission_requirements = admission_requirements_element_h2.find_next('div').text
+                    data['admission requirements'] = admission_requirements
 
-            for data in datas:
-                if data['name'] == name:
-                    data['aadmission_requirements'] = admission_requirements
-                    break
+                # Find elements containing "PROGRAM OVERVIEW" information
+                program_overview_list_element_h2 = soup.findAll('h2', {'class': 'block__title'})
+                for i in program_overview_list_element_h2:
+                    if i.text == 'Program Overview':
+                        data['program overview'] = i.find_next('div').text
+
+                # Find elements containing 'cost' information
+                cost = soup.find('span', {'class': 'fees-cost-dollar'})
+                if cost is not None:
+                    data['cost'] = cost.text
+
+                # Find elements containing 'LEARNING OUTCOMES' information
+                learning_outcomes_title = soup.find('div', {'class': 'details-wrapper'})
+                if learning_outcomes_title is not None:
+
+                    data['learning outcomes'] = learning_outcomes_title.text
+
     else:
         print(f"Failed to retrieve the page. Status code: {response.status_code}")
         return ''
