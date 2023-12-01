@@ -59,8 +59,12 @@ def get_detail_of_course(detail_url, name, datas):
                 # Find elements containing 'LEARNING OUTCOMES' information
                 learning_outcomes_title = soup.find('div', {'class': 'details-wrapper'})
                 if learning_outcomes_title is not None:
-
                     data['learning outcomes'] = learning_outcomes_title.text
+
+                # Find elements containing Academic School information
+                academic_school = soup.find('div', {'class': 'academic-school'})
+                if academic_school is not None:
+                    data['academic school'] = academic_school.text
 
     else:
         print(f"Failed to retrieve the page. Status code: {response.status_code}")
