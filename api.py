@@ -68,6 +68,14 @@ def get_detail_of_course(detail_url, name, datas):
                 if academic_school is not None:
                     data['academic school'] = academic_school.text
 
+                # Find elements containing 'Credential' information
+                semesters_title = soup.find('div', {'class': 'field field--name-field-program-type '
+                                                             'field--type-entity-reference field--label-above'})
+                if semesters_title is not None:
+                    field_item = semesters_title.find('div', {'class': 'field__item'})
+                    if field_item is not None:
+                        data['credential'] = field_item.text
+
     else:
         print(f"Failed to retrieve the page. Status code: {response.status_code}")
         return ''
