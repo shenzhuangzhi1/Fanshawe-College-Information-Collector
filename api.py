@@ -52,9 +52,11 @@ def get_detail_of_course(detail_url, name, datas):
                         data['program overview'] = i.find_next('div').text
 
                 # Find elements containing 'cost' information
-                cost = soup.find('span', {'class': 'fees-cost-dollar'})
-                if cost is not None:
-                    data['cost'] = cost.text
+                cost_div = soup.find('div', {'class': 'international-cost-block cost-block'})
+                if cost_div is not None:
+                    cost = cost_div.find('div', {'class': 'fees-cost'})
+                    if cost is not None:
+                        data['cost'] = cost.text
 
                 # Find elements containing 'LEARNING OUTCOMES' information
                 learning_outcomes_title = soup.find('div', {'class': 'details-wrapper'})
