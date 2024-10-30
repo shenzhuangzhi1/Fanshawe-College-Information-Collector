@@ -8,9 +8,10 @@ if __name__ == '__main__':
 
     # get the count of pages
     count_of_pages = get_count_of_pages()
+    print(count_of_pages)
 
     # get detail
-    for i in range(count_of_pages):
+    for i in range(count_of_pages + 1):
         get_dict_of_course(i, data)
 
     # Store to Excel
